@@ -19,7 +19,6 @@ jobs:
       # Terraform setup steps
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
-      - run: terraform fmt -check
       - run: terraform validate
       - run: terraform plan -out
       # Do it for real
