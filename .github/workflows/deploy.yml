@@ -20,6 +20,6 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
       - run: terraform validate
-      - run: terraform plan
+      - run: terraform plan -out tfplan
       # Do it for real
-      - run: terraform apply
+      - run: terraform apply tfplan
