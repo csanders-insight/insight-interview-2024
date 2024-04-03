@@ -1,13 +1,5 @@
-# Setup
-
-1. Download Terraform binary: https://developer.hashicorp.com/terraform/install#windows
-
-2. Move to PATH
-
-3. Run `terraform init`
-
-# Testing
-
-1. Run local.sh to set up environment variables for Azure login
-
-2. Run `terraform plan`
+- [GitHub Actions Workflow](https://github.com/csanders-insight/insight-interview-2024/actions/workflows/deploy.yml)
+  - [example workflow](https://github.com/Azure-Samples/terraform-github-actions/blob/main/.github/workflows/tf-plan-apply.yml)
+  - [setup-terraform task](https://github.com/hashicorp/setup-terraform)
+- Terraform authentication SPN: `sp-terraform-deploy`
+  - ID/secret are loaded into this repo's secrets
