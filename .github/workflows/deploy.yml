@@ -11,7 +11,7 @@ env:
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
 
 jobs:
-  terraform-test:
+  terraform-deploy:
     runs-on: ubuntu-latest
     steps:
       # Download repo files
@@ -21,6 +21,6 @@ jobs:
       - run: terraform init
       - run: terraform fmt -check
       - run: terraform validate
-      - run: terraform plan
+      - run: terraform plan -out
       # Do it for real
       - run: terraform apply
