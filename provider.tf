@@ -19,11 +19,27 @@ output "current_subscription_display_name" {
 }
 
 resource "azurerm_resource_group" "myresourcegroup" {
-  name     = "interview-example"
+  name     = "resourcegroup-example"
   location = "East US"
 }
 
-# Enable VM to connect to internet, Azure, etc.
+# Virtual network
+resource "azurerm_virtual_network" "mynetwork" {
+  name                = "vnet-example"
+  resource_group_name = azurerm_resource_group.myresourcegroup.name
+  location            = azurerm_resource_group.myresourcegroup.location
+  address_space       = ["10.0.0.0/16"]
+}
+
+# Subdivision of network
+resource "azurerm_subnet" "mysubnet" {
+  name                 = "subnet-example"
+  resource_group_name  = azurerm_resource_group.myresourcegroup.name
+  virtual_network_name = azurerm_virtual_network.mynetwork.name
+  address_prefixes     = ["10.0.1.0/24"]
+}
+
+# Allow VMs to use the subnet
 resource "azurerm_network_interface" "mynic" {
   name                = "nic-example"
   resource_group_name = azurerm_resource_group.myresourcegroup.name
@@ -31,16 +47,17 @@ resource "azurerm_network_interface" "mynic" {
   ip_configuration {
     name                          = "internal"
     private_ip_address_allocation = "Dynamic"
+    subnet_id                     = azurerm_subnet.mysubnet.id
   }
 }
 
 # Create the VM
-resource "azurerm_linux_virtual_machine" "vms" {
-  name                  = "my-new-guy"
-  resource_group_name   = azurerm_resource_group.myresourcegroup.name
-  location              = azurerm_resource_group.myresourcegroup.location
-  size                  = "B"
-  admin_username        = "myadmin"
+resource "azurerm_linux_virtual_machine" "myvm" {
+  name                = "my-new-guy"
+  resource_group_name = azurerm_resource_group.myresourcegroup.name
+  location            = azurerm_resource_group.myresourcegroup.location
+  size                = "B"
+  admin_username      = "myadmin"
   network_interface_ids = [
     azurerm_network_interface.mynic.id
   ]
