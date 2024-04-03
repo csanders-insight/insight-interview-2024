@@ -53,16 +53,24 @@ resource "azurerm_network_interface" "mynic" {
 
 # Create the VM
 resource "azurerm_linux_virtual_machine" "myvm" {
-  name                = "my-new-guy"
-  resource_group_name = azurerm_resource_group.myresourcegroup.name
-  location            = azurerm_resource_group.myresourcegroup.location
-  size                = "B"
-  admin_username      = "myadmin"
+  name                            = "my-new-guy"
+  resource_group_name             = azurerm_resource_group.myresourcegroup.name
+  location                        = azurerm_resource_group.myresourcegroup.location
+  size                            = "Standard_B2ats_v2"
+  admin_username                  = "myadmin"
+  admin_password                  = "Th1sIsF@ke"
+  disable_password_authentication = false
   network_interface_ids = [
     azurerm_network_interface.mynic.id
   ]
   os_disk {
     caching              = "None"
     storage_account_type = "Standard_LRS"
+  }
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
+    version   = "latest"
   }
 }
