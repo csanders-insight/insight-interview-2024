@@ -39,9 +39,13 @@ resource "azurerm_subnet" "mysubnet" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+resource "random_uuid" "random_uuid" {}
+
 # Allow VMs to use the subnet
 resource "azurerm_network_interface" "mynic" {
-  name                = "nic-example"
+  count = var.num_instances
+
+  name                = "${count.index}-${random_uuid.random_uuid.result}"
   resource_group_name = azurerm_resource_group.myresourcegroup.name
   location            = azurerm_resource_group.myresourcegroup.location
   ip_configuration {
@@ -50,8 +54,6 @@ resource "azurerm_network_interface" "mynic" {
     subnet_id                     = azurerm_subnet.mysubnet.id
   }
 }
-
-resource "random_uuid" "random_uuid" {}
 
 # Create the VMs
 resource "azurerm_linux_virtual_machine" "myvm" {
@@ -65,7 +67,7 @@ resource "azurerm_linux_virtual_machine" "myvm" {
   admin_password                  = "Th1sIsF@ke"
   disable_password_authentication = false
   network_interface_ids = [
-    azurerm_network_interface.mynic.id
+    azurerm_network_interface.mynic[count.index].id
   ]
   os_disk {
     caching              = "None"
