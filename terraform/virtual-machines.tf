@@ -1,43 +1,5 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "=3.0.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
-data "azurerm_subscription" "current" {
-}
-
-output "current_subscription_display_name" {
-  value = data.azurerm_subscription.current.display_name
-}
-
-resource "azurerm_resource_group" "myresourcegroup" {
-  name     = "resourcegroup-example"
-  location = "East US"
-}
-
-# Virtual network
-resource "azurerm_virtual_network" "mynetwork" {
-  name                = "vnet-example"
-  resource_group_name = azurerm_resource_group.myresourcegroup.name
-  location            = azurerm_resource_group.myresourcegroup.location
-  address_space       = ["10.0.0.0/16"]
-}
-
-# Subdivision of network
-resource "azurerm_subnet" "mysubnet" {
-  name                 = "subnet-example"
-  resource_group_name  = azurerm_resource_group.myresourcegroup.name
-  virtual_network_name = azurerm_virtual_network.mynetwork.name
-  address_prefixes     = ["10.0.1.0/24"]
-}
+# To reset:
+# terraform destroy --target azurerm_network_interface.mynic
 
 resource "random_uuid" "random_uuid" {}
 
@@ -45,7 +7,7 @@ resource "random_uuid" "random_uuid" {}
 resource "azurerm_network_interface" "mynic" {
   count = var.num_instances
 
-  name                = "${count.index}-${random_uuid.random_uuid.result}"
+  name                = "${count.index + 1}-${random_uuid.random_uuid.result}"
   resource_group_name = azurerm_resource_group.myresourcegroup.name
   location            = azurerm_resource_group.myresourcegroup.location
   ip_configuration {
@@ -59,7 +21,7 @@ resource "azurerm_network_interface" "mynic" {
 resource "azurerm_linux_virtual_machine" "myvm" {
   count = var.num_instances
 
-  name                            = "${count.index}-${random_uuid.random_uuid.result}"
+  name                            = "${count.index + 1}-${random_uuid.random_uuid.result}"
   resource_group_name             = azurerm_resource_group.myresourcegroup.name
   location                        = azurerm_resource_group.myresourcegroup.location
   size                            = "Standard_B2ats_v2"

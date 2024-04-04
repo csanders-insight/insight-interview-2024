@@ -20,8 +20,3 @@ import {
   id = "${local.my_vnet}/subnets/subnet-example"
   to = azurerm_subnet.mysubnet
 }
-
-import {
-  id = "${local.my_rg}/providers/Microsoft.Network/networkInterfaces/nic-example"
-  to = azurerm_network_interface.mynic
-}
