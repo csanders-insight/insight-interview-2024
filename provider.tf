@@ -51,9 +51,13 @@ resource "azurerm_network_interface" "mynic" {
   }
 }
 
-# Create the VM
+resource "random_uuid" "random_uuid" {}
+
+# Create the VMs
 resource "azurerm_linux_virtual_machine" "myvm" {
-  name                            = "my-new-guy"
+  count = var.num_instances
+
+  name                            = "${count.index}-${random_uuid.random_uuid.result}"
   resource_group_name             = azurerm_resource_group.myresourcegroup.name
   location                        = azurerm_resource_group.myresourcegroup.location
   size                            = "Standard_B2ats_v2"

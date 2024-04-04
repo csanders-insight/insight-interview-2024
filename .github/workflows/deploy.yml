@@ -1,10 +1,15 @@
 name: Deploy Resources via Terraform
 
 on:
-  push:
   workflow_dispatch:
+    inputs:
+      num-instances:
+        description: "Number of virtual machines and associated resources to deploy"
+        type: number
+        default: 3
 
 env:
+  TF_VAR_NUM_INSTANCES: ${{ github.event.inputs.num-instances }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
