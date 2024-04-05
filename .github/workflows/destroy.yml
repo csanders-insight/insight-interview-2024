@@ -1,10 +1,10 @@
-name: Deploy Resources via Terraform
+name: Destroy all deployed resources via Terraform
 
 on:
   workflow_dispatch:
     inputs:
       num-instances:
-        description: "Number of virtual machines and associated resources to deploy"
+        description: "Number of virtual machines and associated resources to DESTROY"
         type: number
         default: 3
 
@@ -23,12 +23,7 @@ jobs:
         working-directory: ./terraform
     runs-on: ubuntu-latest
     steps:
-      # Download repo files
       - uses: actions/checkout@v4
-      # Terraform setup steps
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
-      - run: terraform validate
-      - run: terraform plan -out tfplan
-      # Do it for real
-      - run: terraform apply tfplan
+      - run: terraform destroy -auto-approve
