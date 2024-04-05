@@ -19,7 +19,7 @@ output "current_subscription_display_name" {
 }
 
 resource "random_id" "random_id" {
-  byte_length = 2
+  byte_length = 3
 }
 
 resource "azurerm_resource_group" "myresourcegroup" {
