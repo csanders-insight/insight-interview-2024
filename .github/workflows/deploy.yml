@@ -17,9 +17,6 @@ env:
 
 jobs:
   terraform-deploy:
-    defaults:
-      run:
-        working-directory: ./terraform
     runs-on: ubuntu-latest
     steps:
       # Download repo files
